@@ -8,11 +8,15 @@ Complete the process https://ionicframework.com/docs/v2/intro/installation/
 Step 1:    
 In your project folder - mkdir www 
 
-Step 2:
+Step 2:   
 cordova prepare
 
-# Run on specific platform
-ionic run android
-ionic run ios
-ionic run windows
+# Run on specific platform  
+
+ionic run android 
+
+ionic run ios 
+
+ionic run windows 
+
 
