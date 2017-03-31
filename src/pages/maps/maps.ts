@@ -9,7 +9,8 @@ import {
     GoogleMapsMarkerOptions,
     Geolocation,
     NativeGeocoder,
-    NativeGeocoderReverseResult} from 'ionic-native';
+    NativeGeocoderReverseResult
+} from 'ionic-native';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -28,7 +29,8 @@ export class MapsPage {
         private platform: Platform,
         private _zone: NgZone) {
 
-        this.platform.ready().then(() => this.onPlatformReady());
+        this.platform.ready()
+            .then(() => this.onPlatformReady());
     }
 
     private onPlatformReady(): void {
@@ -63,57 +65,54 @@ export class MapsPage {
             this.map.clear();
             this.map.setDebuggable(true);
 
-            this.map.one(GoogleMapsEvent.MAP_READY)
-                .then((data: any) => {
-                    // alert("GoogleMap.onMapReady(): " + JSON.stringify(data));
+            this.map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
+                // alert("GoogleMap.onMapReady(): " + JSON.stringify(data));
 
-                    this._zone.run(() => {
-                        // let myPosition = new GoogleMapsLatLng(this._latitude, this._longitude);//38.9072, -77.0369
-                        // console.log("My position is", myPosition);
-                        // this.map.animateCamera({ target: myPosition, zoom: 10 });
-                        this.map.getMyLocation().then(res => {
-                            console.log('Give it to me' + res.latLng);
+                this._zone.run(() => {
+                    // let myPosition = new GoogleMapsLatLng(this._latitude, this._longitude);//38.9072, -77.0369
+                    // console.log("My position is", myPosition);
+                    // this.map.animateCamera({ target: myPosition, zoom: 10 });
+                    this.map.getMyLocation().then(res => {
+                        console.log('Give it to me' + res.latLng);
 
-                            // alert("GoogleMap.onMapReady(): " + JSON.stringify(res.latLng));
-                            let myPosition = new GoogleMapsLatLng(res.latLng.lat, res.latLng.lng);
+                        // alert("GoogleMap.onMapReady(): " + JSON.stringify(res.latLng));
+                        let myPosition = new GoogleMapsLatLng(res.latLng.lat, res.latLng.lng);
 
-                            var addr = 'Your current location.';
+                        var addr = 'Your current location.';
 
-                            NativeGeocoder.reverseGeocode(res.latLng.lat, res.latLng.lng)
-                                .then((result: NativeGeocoderReverseResult) => {
-                                    addr = "Your address is \n " + result.city + " in " + result.countryName;
-                                    // alert(addr);
-                                    console.log("The address is\n " + result.city + " in " + result.countryName);
-                                })
-                                .catch((error: any) => console.log(error));
+                        NativeGeocoder.reverseGeocode(res.latLng.lat, res.latLng.lng).then((result: NativeGeocoderReverseResult) => {
+                            addr = "Your are at \n " + result.city + " in " + result.countryName;
+                            // alert(addr);
+                            console.log("The address is\n " + result.city + " in " + result.countryName);
+                        })
+                            .catch((error: any) => console.log(error));
 
+                        if (res.latLng.lat != 0) {
 
-                            this.map.animateCamera({ target: myPosition, zoom: 14, tilt: 30 });
-                            this.map.refreshLayout();
-                            this.map.addGroundOverlay(true);
+                            let markerOptions: GoogleMapsMarkerOptions = {
+                                position: myPosition,
+                                title: addr
+                            };
 
-                            if (res.latLng.lat != 0) {
+                            this.map.addMarker(markerOptions)
+                                .then(
+                                (marker: GoogleMapsMarker) => {
+                                    // marker.setDraggable(true);
 
-                                let markerOptions: GoogleMapsMarkerOptions = {
-                                    position: myPosition,
-                                    title: addr
-                                };
-
-                                this.map.addMarker(markerOptions)
-                                    .then(
-                                    (marker: GoogleMapsMarker) => {
-                                        // marker.setDraggable(true);
-
-                                        marker.setTitle(addr);
+                                    marker.setTitle(addr);
+                                    if (!addr.startsWith('Your current location.'))
                                         marker.showInfoWindow();
+                                });
 
-                                    });
+                            this.map.setAllGesturesEnabled(true);
+                        }
 
-                                this.map.setAllGesturesEnabled(true);
-                            }
-                        });
+                        this.map.animateCamera({ target: myPosition, zoom: 14, tilt: 30 });
+                        this.map.refreshLayout();
+                        this.map.addGroundOverlay(true);
                     });
                 });
+            });
         });
     }
 

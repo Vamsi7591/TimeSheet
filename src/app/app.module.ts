@@ -59,7 +59,7 @@ import { ChartsModule } from 'ng2-charts';
         ProjectMasterInputPage
     ],
     imports: [
-        IonicModule.forRoot(MyApp),
+        IonicModule.forRoot(MyApp,{tabsPlacement:'bottom'},{ mode: 'md' }),
         HttpModule,
         ChartsModule
         // AgmCoreModule.forRoot({ apiKey: 'AIzaSyDsKR-DzJJuYHwOy-ebrtBIYfSpXtz5B0Y' })

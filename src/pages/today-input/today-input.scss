@@ -11,7 +11,14 @@ page-today-input {
 
   .home .label-md{
     background: #ffffff;
-    color: #673147;
+    color: #000;//#673147;
+  }
+
+.error{
+    color: #e13838;
+}
+  .list-md {
+      margin: -1px 10px 16px 0;
   }
 
   .select-ios .select-icon .select-icon-inner{
@@ -52,8 +59,9 @@ page-today-input {
     font-size: 1.6rem;
   }
 
-  .label {
+  .label{
     margin:0;
+    color: #4065a0;
   }
 
   .item-inner {
@@ -71,8 +79,10 @@ page-today-input {
   ion-input, ion-textarea {
             background-color: #f2f2f2;
             // padding: 5px 10px;
-            border: 1px solid #673147;
+            padding: 2%;
+            border: 1px solid #000;//#673147;
             margin-right: 10px;
+            margin-bottom: 200%;
   }
 
   .icon-pad{

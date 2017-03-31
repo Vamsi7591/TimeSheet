@@ -38,10 +38,17 @@ page-login {
       box-shadow: none !important;
     }
 
+    // .submit-btn {
+    //   background: #673147;
+    //   border-radius: 30px !important;
+    //   border: 1px solid #ffffff;
+    // }
+
     .submit-btn {
-      background: #673147;
+      background: #ff6906;
       border-radius: 30px !important;
-      border: 1px solid #ffffff;
+      padding: 7%;
+      border: 1px solid #003380;
     }
 
     .register-btn {
@@ -58,6 +65,7 @@ page-login {
 
     .icon-bg{
       background: #ffffff;
+      margin-top: 10%;
     }
   }
 }

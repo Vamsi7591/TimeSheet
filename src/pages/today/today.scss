@@ -9,7 +9,11 @@ page-today {
   }
 
   .home {
-    background: #fffff;//B3B6B7
+    background: #ffffff;//B3B6B7
+  }
+
+  .list-md {
+    margin: 0;
   }
 
   // .card-md{
@@ -18,6 +22,16 @@ page-today {
   .label-md {
     margin: 5px 0px 5px 0;
     text-align: start;
+  }
+
+  .item-md p{
+    max-height: 45px;
+    line-height: inherit;
+  }
+
+  .item-ios p{
+    max-height: 36px;
+    line-height: inherit;
   }
 
   .card-margin {
@@ -29,9 +43,9 @@ page-today {
     overflow: hidden;
   }
 
-.card-md{
-background: #c2c2c2;
-}
+  .card-md{
+  background: #c2c2c2;
+  }
 
   .label {
     // margin-bottom: 3px;
@@ -69,6 +83,14 @@ background: #c2c2c2;
     // padding-right: 5px;
     margin-right: 3px;
     margin-bottom: 3px;
+  }
+
+  .item-divider-md {
+    padding-left: 16px;
+    color: #ffffff;
+    background-color: #003380;//rgba(0, 50, 128, 0.75);//#47778e;
+    border-bottom: 5px solid #ff6906;//rgba(255, 115, 22, 1);//#2ec95c;
+    font-size: 1.4rem;
   }
 
 }

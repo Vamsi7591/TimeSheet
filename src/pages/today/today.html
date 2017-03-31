@@ -28,6 +28,17 @@
 
 
 <ion-content no-padding class="home">
+
+<ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+
   <ion-list>
 <ion-item-group *ngFor="let division of todayRep">
 <ion-card>

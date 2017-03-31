@@ -11,6 +11,8 @@ page-profile-view {
     height: 108px;
     border-radius: 50%;
     overflow: hidden;
+    min-width: 108px;
+    min-height: 108px;
   }
 
   .page-title {
@@ -29,7 +31,12 @@ page-profile-view {
   }
 
   .scroll-content {
-  padding-bottom:0!important;
-}
+    padding-bottom:0!important;
+  }
+
+  ion-row {
+    align-items: center;
+    text-align: center;
+  }
 
 }

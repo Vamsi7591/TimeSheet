@@ -7,7 +7,6 @@ import { Keyboard } from 'ionic-native';
     selector: 'page-employee-master-input',
     templateUrl: 'employee-master-input.html'
 })
-
 export class EmployeeMasterInputPage {
 
     @ViewChild('employeeNameInput1') employeeNameInput1;
@@ -30,7 +29,7 @@ export class EmployeeMasterInputPage {
         mobile: '',
         bloodGroup: '',
         password:'',
-        base64Image: 'assets/icon/logo.png',
+        base64Image: 'assets/icon/user_icon.png',
         isAdmin: false
     };
 
@@ -114,18 +113,6 @@ export class EmployeeMasterInputPage {
         //     }
         //
         // }
-
-        //http://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x
-        // export PATH=${PATH}:/Users/prisamwilco/Library/Android/sdk/tools
-        // export PATH=${PATH}:/Users/prisamwilco/Library/Android/sdk/platform-tools
-        //
-        // For Android:
-        // export PATH=${PATH}:/Users/prisamwilco/Library/Android/sdk/toolsbin/sdkmanager
-        //
-        // export PATH=${PATH}:/Users/prisamwilco/Library/Android/sdk/tools/bin/avdmanager
-
-        // export ANDROID_HOME=/Users/prisamwilco/Library/Android/sdk
-        //keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 
     }
 

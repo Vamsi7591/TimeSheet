@@ -13,12 +13,17 @@
       <button menuClose ion-item (click)="goToEmployeeProject()">Employee Project</button>
       <button menuClose ion-item (click)="goToSummaryDetails()">Summary Details</button>
     </ion-list> -->
+    <ion-item color="bg">
+    <p style="color: #fff; text-align: center;padding: 0;">LOGGED IN AS <strong>ADMINISTRATOR</strong></p>
+    </ion-item>
+
     <ion-list>
       <!-- remember the `this.pages` object we created in `app.js`?
       // Iterate through, then when clicked, run the associated function
       // passing in the #p item. -->
       <!-- // changed #p to let p instead -->
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage($event,p)">
+      <button menuClose ion-item *ngFor="let p of pages"  (click)="openPage($event,p)">
+        <button ion-button color="white" item-right [class.activeHighlight]="checkActive(p)" style="border-radius: 0px;"> </button>
         {{p.title}}
       </button>
     </ion-list>

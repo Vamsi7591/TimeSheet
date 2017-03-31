@@ -26,12 +26,38 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
-        <preference name="Fullscreen" value="false" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+        <preference name="orientation" value="portrait" />
+        <icon height="57" src="resources/ios/icon/Icon.png" width="57" />
+        <icon height="114" src="resources/ios/icon/Icon@2x.png" width="114" />
+        <icon height="40" src="resources/ios/icon/Icon-40.png" width="40" />
+        <icon height="80" src="resources/ios/icon/Icon-40@2x.png" width="80" />
+        <icon height="50" src="resources/ios/icon/Icon-50.png" width="50" />
+        <icon height="100" src="resources/ios/icon/Icon-50@2x.png" width="100" />
+        <icon height="60" src="resources/ios/icon/Icon-60.png" width="60" />
+        <icon height="120" src="resources/ios/icon/Icon-60@2x.png" width="120" />
+        <icon height="180" src="resources/ios/icon/Icon-60@3x.png" width="180" />
+        <icon height="72" src="resources/ios/icon/Icon-72.png" width="72" />
+        <icon height="144" src="resources/ios/icon/Icon-72@2x.png" width="144" />
+        <icon height="76" src="resources/ios/icon/Icon-76.png" width="76" />
+        <icon height="152" src="resources/ios/icon/Icon-76@2x.png" width="152" />
+        <icon height="167" src="resources/ios/icon/Icon-83.5@2x.png" width="167" />
+        <icon height="29" src="resources/ios/icon/Icon-small.png" width="29" />
+        <icon height="58" src="resources/ios/icon/Icon-small@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/Icon-small@3x.png" width="87" />
+        <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
+        <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
+        <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
+        <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
+        <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
+        <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <splash height="480" src="resources/ios/splash/Default.png" width="320" />
     </platform>
+    <preference name="CrosswalkAnimatable" value="true" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="orientation" value="portrait" />
     <preference name="webviewbounce" value="false" />
@@ -48,7 +74,7 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreenBackgroundColor" value="0xFFFFFFFF" />
     <preference name="FadeSplashScreen" value="true" />
-    <preference name="windows-target-version" value="8.1" />
+    <preference name="windows-target-version" value="10.0" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
@@ -56,7 +82,9 @@
     <plugin name="cordova-plugin-console" spec="1.0.5" />
     <plugin name="cordova-plugin-statusbar" spec="2.2.1" />
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
+    <engine name="android" spec="~6.1.0" />
     <plugin name="cordova-sqlite-storage" spec="~2.0.2" />
+    <plugin name="cordova-plugin-crop" spec="~0.3.1" />
     <plugin name="cordova-plugin-googlemaps" spec="https://github.com/phonegap-googlemaps-plugin/cordova-plugin-googlemaps">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDsKR-DzJJuYHwOy-ebrtBIYfSpXtz5B0Y" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyC_Lfh7BxqgeQV2blgHs_iGwpqUBsgx-zM" />
@@ -64,13 +92,18 @@
     <plugin name="cordova-plugin-geolocation" spec="~2.4.2" />
     <plugin name="cordova-plugin-nativegeocoder" spec="~1.0.1" />
     <plugin name="cordova-plugin-email" spec="~1.2.6" />
-    <plugin name="cordova-plugin-network-information" spec="~1.3.2" />
     <plugin name="com.darktalker.cordova.screenshot" spec="https://github.com/gitawego/cordova-screenshot.git" />
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.6" />
     <plugin name="cordova-plugin-device" spec="~1.1.4" />
-    <plugin name="cordova-plugin-crop" spec="~0.3.1" />
-    <engine name="android" spec="~6.1.2" />
-    <engine name="ios" spec="~4.3.1" />
-    <engine name="windows" spec="~4.4.3" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <plugin name="cordova-plugin-file" spec="~4.3.2" />
+    <plugin name="cordova-plugin-network-information" spec="~1.3.2" />
+    <plugin name="cordova.plugins.diagnostic" spec="~3.4.2" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.3.0">
+        <variable name="XWALK_VERSION" value="23+" />
+        <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
+        <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
+        <variable name="XWALK_MODE" value="embedded" />
+        <variable name="XWALK_MULTIPLEAPK" value="true" />
+    </plugin>
 </widget>

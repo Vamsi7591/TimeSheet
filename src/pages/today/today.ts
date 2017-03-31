@@ -21,6 +21,7 @@ export class TodayPage {
     public todayAllRep: any;
     public todayDivisions: any;
     queryText: string = '';
+    refresherTimeOut: any = 500;
 
     constructor(
         public navCtrl: NavController,
@@ -40,22 +41,23 @@ export class TodayPage {
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad TodayPage');
-        this.loadToday();
+        this.loadToday(false);
     }
 
-    loadToday() {
+    loadToday(flag) {
 
         let loader = this.loadingController.create({
             content: 'Loading Timesheet...'
         });
 
-        loader.present();
-
-        this.auth.loadTodayReport()
+        this.auth.loadTodayReport(flag)
             .then(data => {
-                this.todayAllRep = data;
+
+                loader.present();
+
+                this.todayAllRep = _.sortBy(data, 'date').reverse();
                 this.todayDivisions =
-                    _.chain(data)
+                    _.chain(this.todayAllRep)
                         .groupBy('date')
                         .toPairs()
                         .map(item => _.zipObject(['divisionName', 'divisionData'], item))
@@ -65,6 +67,14 @@ export class TodayPage {
                 // console.log('division data', this.todayRep);
                 loader.dismiss();
             });
+    }
+
+    doRefresh(refresher) {
+        setTimeout(() => {
+            console.log('Async operation has ended');
+            this.loadToday(true);
+            refresher.complete();
+        }, this.refresherTimeOut);
     }
 
     updateTimeSheet() {

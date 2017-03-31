@@ -10,6 +10,8 @@ import {
     Screenshot,
     BarcodeScanner
 } from 'ionic-native';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LinkedIn } from '@ionic-native/linkedin';
 
 import { PasswordPage } from '../password/password';
 import { LoginPage } from '../login/login';
@@ -23,7 +25,8 @@ declare var window: any;
 
 @Component({
     selector: 'page-profile-view',
-    templateUrl: 'profile-view.html'
+    templateUrl: 'profile-view.html',
+    providers: [LinkedIn]
 })
 export class ProfileViewPage {
 
@@ -35,13 +38,17 @@ export class ProfileViewPage {
     @ViewChild('bloodGroupInput') bloodGroupInput;
 
     empInfo = {
-        employeeName: 'Suresh Reddy',
-        employeeCode: 'e008',
-        emailId: 'suresh@wilcosource.com',
-        designation: 'Technical Architect',
-        mobile: '+15109435983',
-        bloodGroup: 'O +ve',
+        employeeName: '',//'Suresh Reddy',
+        employeeCode: '',//'e008',
+        emailId: '',//'suresh@wilcosource.com',
+        designation: '',//'Technical Architect',
+        mobile: '',//'+15109435983',
+        bloodGroup: '',//'O +ve',
     };
+
+    slideOneForm: FormGroup;
+    slideTwoForm: FormGroup;
+    submitAttempt: boolean = false;
 
     assetCollection;
     userAuth: any
@@ -54,11 +61,13 @@ export class ProfileViewPage {
 
     changePassword: boolean = false;
 
-    public base64Image: any = 'assets/icon/logo.png';
+    public base64Image: any = 'assets/icon/user_icon.png';
 
     deviceId: string = '';
-    hideDevice= false;
+    hideDevice = false;
     platformIcon: any;
+
+    localStorage: any;
 
     constructor(public navCtrl: NavController,
         private _zone: NgZone,
@@ -69,7 +78,17 @@ export class ProfileViewPage {
         public _actionSheetCtrl: ActionSheetController,
         public loadingCtrl: LoadingController,
         private _viewController: ViewController,
+        private linkedin: LinkedIn,
+        public formBuilder: FormBuilder,
+        public keyboard: Keyboard,
         public navParams: NavParams) {
+
+
+        // check if there is an active session
+        // this.linkedin.hasActiveSession().then((active) => {
+        //     console.log('has active session?', active)
+        //     alert('has active session?' + active);
+        // });
 
         if (this._platform.is('android')) {
             this.platformIcon = 'logo-android';
@@ -78,14 +97,67 @@ export class ProfileViewPage {
         } else if (this._platform.is('windows')) {
             this.platformIcon = 'logo-windows';
         } else {
-          this.hideDevice = true;
+            this.hideDevice = true;
             this.platformIcon = 'browsers';
         }
+
+
+        this.slideOneForm = this.formBuilder.group({
+            employeeName: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
+            employeeCode: ['', Validators.compose([Validators.minLength(4), Validators.maxLength(10), Validators.pattern('[a-zA-Z0-9 ]*'), Validators.required])],
+            emailId: ['', Validators.compose([Validators.required, this.emailValidator])],
+            designation: ['', Validators.compose([Validators.minLength(4), Validators.maxLength(20), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
+            mobile: ['', Validators.compose([Validators.minLength(9), Validators.maxLength(11), Validators.pattern('[0-9 ]*'), Validators.required])],
+            bloodGroup: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(10), Validators.pattern('[a-zA-Z ()+-]*'), Validators.required])]
+        });
+
+
+        this._platform.ready().then(() => {
+
+            //show the keyboard accessory bar with the next, previous and done buttons
+            Keyboard.hideKeyboardAccessoryBar(false);
+
+            this.localStorage = window.localStorage;
+
+            if (this.localStorage.getItem('userInfo') != null) {
+                this.empInfo = JSON.parse(this.localStorage.getItem('userInfo'));
+                this.submitAttempt = true;
+            }
+
+        });
+    }
+
+    emailValidator(control) {
+        var EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(control.value);
+
+        if (!EMAIL_REGEXP) {
+            return { invalidEmail: true };
+        }
+    }
+
+    formClick(value) {
+        this.submitAttempt = true;
+        // if (this.submitAttempt) {
+        //     this.submitAttempt = false;
+        // } else {
+        //     this.submitAttempt = true;
+        // }
+        console.log(JSON.stringify(value));
+
+        this.localStorage.setItem('userInfo', JSON.stringify(value));
+        Keyboard.close();
     }
 
     takeScreenShot() {
         // Take a screenshot and save to file
         Screenshot.save('jpg', 100, new Date().getTime() + '_screenshot.jpg');
+
+         // login
+        // const scopes = ['r_basicprofile', 'r_emailaddress', 'rw_company_admin', 'w_share'];
+        // this.linkedin.login(scopes, true)
+        //   .then(() => console.log('Logged in!')
+        //   .catch(e => console.log('Error logging in', e));
+
     }
 
     navToChangePassword() {
@@ -122,29 +194,32 @@ export class ProfileViewPage {
     }
 
     moveNext(val, v) {
-        // if (v == "employeeName") {
-        //     this.employeeCodeInput.setFocus();
-        // } else if (v == "employeeCode") {
-        //     this.emailIdInput.setFocus();
-        // } else if (v == "emailId") {
-        //     this.designationInput.setFocus();
-        // } else if (v == "designation") {
-        //     this.mobileInput.setFocus();
-        // } else if (v == "mobile") {
-        //     this.bloodGroupInput.setFocus();
-        // } else if (v == "bloodGroup") {
-        //
-        //     if (this._platform.is('ios')) {
-        //         Keyboard.disableScroll(true);
-        //     } else {
-        //         Keyboard.close();
-        //     }
-        //
-        // }
+        if (val.keyCode == 9 || val.keyCode == 13) {
+            if (v == "employeeName") {
+                this.employeeCodeInput.setFocus();
+            } else if (v == "employeeCode") {
+                this.emailIdInput.setFocus();
+            } else if (v == "emailId") {
+                this.designationInput.setFocus();
+            } else if (v == "designation") {
+                this.mobileInput.setFocus();
+            } else if (v == "mobile") {
+                this.bloodGroupInput.setFocus();
+            } else if (v == "bloodGroup") {
+                if (this._platform.is('ios')) {
+                    Keyboard.disableScroll(true);
+                } else {
+                    if (val.keyCode == 13) {
+                        Keyboard.close();
+                    }
+                }
+            }
+        }
     }
 
     logOut() {
         this.userSettings.userLoggedOut();
+        this.localStorage.removeItem('userInfo');
         this.navCtrl.parent.parent.setRoot(LoginPage);
     }
 
@@ -212,21 +287,21 @@ export class ProfileViewPage {
         if (this._platform.is('android')) {
             // alert(' android ');
 
-            if (Device.platform.toString().toLowerCase().match('android')) {
+            // if (Device.platform.toString().toLowerCase().match('android')) {
 
-                Crop.crop(path, { quality: 100 })
-                    .then(
-                    newImage => {
-                        console.log("new image path is: " + newImage)
-                        // alert('FilePath : ' + newImage);
-                        this.base64Image = newImage;
-                    },
-                    error => {
-                        console.error("Error cropping image", error)
-                        // alert('Error occured : ' + error.toString());
-                        return path;
-                    });
-            }
+            Crop.crop(path, { quality: 100 })
+                .then(
+                newImage => {
+                    console.log("new image path is: " + newImage)
+                    // alert('FilePath : ' + newImage);
+                    this.base64Image = newImage;
+                },
+                error => {
+                    console.error("Error cropping image", error)
+                    // alert('Error occured : ' + error.toString());
+                    return path;
+                });
+            // }
         } else if (this._platform.is('ios')) {
             // alert(' iOS ');
             return path;
@@ -430,9 +505,19 @@ export class ProfileViewPage {
             }).then((_croppedImage) => {
                 //alert('got image ' + _croppedImage);
                 // convert picture to blob
-                this.base64Image = _croppedImage;
+
+                if (this._platform.is('ios')) {
+                    //'data:image/jpeg;base64,'+
+                    this.base64Image = _croppedImage;
+                } else if (this._platform.is('android')) {
+                    this.base64Image = _croppedImage;
+                } else {
+                    this.base64Image = _croppedImage;
+                }
+
+
                 loading.present();
-                return this.makeFileIntoBlob(_croppedImage);
+                return this.makeFileIntoBlob(this.base64Image);
             }).then((_imageBlob) => {
                 //alert('got image blob ' + _imageBlob);
 
@@ -450,15 +535,15 @@ export class ProfileViewPage {
                 this.ionViewDidLoad();
             }, (_error) => {
                 loading.dismiss();
-                // alert('Error ' + (_error.message || _error));
+                alert('Error ' + (_error.message || _error));
             });
         } else {
             // Gallery
             let optionsGallery = {
                 maximumImagesCount: 1,
-                allowEdit: true,
-                saveToPhotoAlbum: true,
-                sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                // allowEdit: true,
+                // saveToPhotoAlbum: true,
+                // sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
                 quality: 100
             };
 
@@ -476,9 +561,10 @@ export class ProfileViewPage {
                     // alert('ERROR occured : ' + error.toString());
                 })
                 .then((_img) => {
-
+                    //
                     if (this._platform.is('ios')) {
-                        return _img;
+                        //'data:image/jpeg;base64,'+
+                        return Crop.crop(_img, { quality: 100 });
                     } else if (this._platform.is('android')) {
                         _img = 'file://' + _img;
                         return Crop.crop(_img, { quality: 100 });

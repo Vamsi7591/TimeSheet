@@ -41,6 +41,7 @@
           <ion-datetime placeholder="Select here" [disabled]="!canEdit"
                         min="{{minDate}}" max="{{currentDate}}"
                         displayFormat="DDDD MMM D, YYYY" pickerFormat="DDDD MMM D YYYY"
+                        (ionChange)="changeDate()"
                         [(ngModel)]="todayInsertData._dateNow"
                         name="something1" required>
         </ion-datetime>

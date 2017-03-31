@@ -4,6 +4,7 @@ import { EmailComposer } from 'ionic-native';
 
 import { AuthService } from '../../providers/auth-service';
 import * as moment from 'moment';
+import * as firebase from 'firebase';
 
 @Component({
     selector: 'page-today-input',
@@ -33,6 +34,7 @@ export class TodayInputPage {
         _timeDiff: '',
         _taskDescription: ''
     };
+    assetCollection;
 
     constructor(
         public navCtrl: NavController,
@@ -48,7 +50,14 @@ export class TodayInputPage {
             this.viewOrEdit = true;
             this.canEdit = false;
 
-            this.myDate.setMonth(this.navParams.data.date.substring(0, 2));
+            var _m = '0';
+            if (parseInt(this.navParams.data.date.substring(0, 2)) <= 10) {
+                _m = '0' + (parseInt(this.navParams.data.date.substring(0, 2)) - 1);
+            } else {
+                _m = '' + (parseInt(this.navParams.data.date.substring(0, 2)) - 1);
+            }
+
+            this.myDate.setMonth(_m);
             this.myDate.setDate(this.navParams.data.date.substring(3, 5));
             this.myDate.setFullYear(this.navParams.data.date.substring(6, 10));
 
@@ -58,6 +67,7 @@ export class TodayInputPage {
             this.todayInsertData._timeEnds = this.navParams.data.endTime;
             this.todayInsertData._projectName = this.navParams.data.projectName;
             this.todayInsertData._taskDescription = this.navParams.data.taskDescription;
+            this.todayInsertData._timeDiff = this.navParams.data.totalHours;
 
         } else {
             this.viewOrEdit = false;
@@ -65,14 +75,11 @@ export class TodayInputPage {
 
             this.currentDate = this.myDate.toISOString();
             this.todayInsertData._dateNow = this.currentDate;
-            // this.todayInsertData._timeStarts = "10:30";
-            // this.todayInsertData._timeEnds = "19:00";
-
         }
 
 
         let reqDate = new Date();
-        let _fullDate = (1 + this.myDate.getMonth()) + "/" + this.myDate.getDate() + "/" + this.myDate.getFullYear()
+        let _fullDate = (1 + this.myDate.getMonth()) + "/" + this.myDate.getDate() + "/" + this.myDate.getFullYear();
 
         if (this.myDate.getDate() > 7) {
             if (this.myDate.getMonth() == 0) {
@@ -110,6 +117,27 @@ export class TodayInputPage {
             // Edit form
             this.myIcon = "done-all";
         }
+
+        this.loadFirebaseData();
+    }
+
+    loadFirebaseData() {
+
+        var result = [];
+        // load data from firebase...
+        firebase.database().ref('today').orderByKey().once('value', (_snapshot: any) => {
+
+            _snapshot.forEach((_childSnapshot) => {
+                // get the key/id and the data for display
+                var element = _childSnapshot.val();
+                element.id = _childSnapshot.key;
+
+                result.push(element);
+            });
+            console.log("firebase : ", result);
+            this.assetCollection = result;
+        });
+
     }
 
     changeStartTime() {
@@ -217,6 +245,13 @@ export class TodayInputPage {
 
     }
 
+    changeDate() {
+        console.log(this.todayInsertData._dateNow);
+        let _fullDateww = this.todayInsertData._dateNow.substring(5, 7) + "/" + this.todayInsertData._dateNow.substring(8, 10) + "/" + this.todayInsertData._dateNow.substring(0, 4);
+        console.log(_fullDateww);
+        // displayFormat="DDDD MMM D, YYYY" pickerFormat="DDDD MMM D YYYY"
+    }
+
     ionViewDidLoad() {
         this.loadProjectDetails();
         console.log('ionViewDidLoad TodayInputPage');
@@ -249,18 +284,49 @@ export class TodayInputPage {
                 alertMessage = 'Data inserted sucessfully.';
             }
             console.log('TodayInputPage : ', this.todayInsertData);
-            this.todayInsertData._dateNow = (1 + this.myDate.getMonth()) + "/" + this.myDate.getDate() + "/" + this.myDate.getFullYear();
+
+            this.todayInsertData._dateNow = this.todayInsertData._dateNow.substring(5, 7) + "/" + this.todayInsertData._dateNow.substring(8, 10) + "/" + this.todayInsertData._dateNow.substring(0, 4);
+
             let alert = this.alertCtrl.create({
                 title: 'Time Sheet',
                 subTitle: alertMessage,
                 buttons: [{
                     text: 'OK',
                     handler: () => {
-                        // console.log('OK clicked');
                         this.navCtrl.pop();
                     }
                 }]
             });
+
+            let _day = {
+                date: this.todayInsertData._dateNow,
+                endTime: this.todayInsertData._timeEnds,
+                projectName: this.todayInsertData._projectName,
+                startTime: this.todayInsertData._timeStarts,
+                taskDescription: this.todayInsertData._taskDescription,
+                totalHours: this.todayInsertData._timeDiff
+            };
+
+            if (this.viewOrEdit) {
+
+                for (let k = 0; k < this.assetCollection.length; k++) {
+
+                    if (this.assetCollection[k].date === this.navParams.data.date &&
+                        this.assetCollection[k].endTime === this.navParams.data.endTime &&
+                        this.assetCollection[k].projectName === this.navParams.data.projectName &&
+                        this.assetCollection[k].startTime === this.navParams.data.startTime &&
+                        this.assetCollection[k].taskDescription === this.navParams.data.taskDescription &&
+                        this.assetCollection[k].totalHours === this.navParams.data.totalHours) {
+                        firebase.database().ref('today').child(this.assetCollection[k].id).update(_day);
+                        break;
+                    }
+
+                }
+
+            } else {
+                firebase.database().ref('today').child(this.assetCollection.length).set(_day);
+            }
+
             alert.present();
         } else {
             this.canEdit = true;
@@ -268,7 +334,6 @@ export class TodayInputPage {
     }
 
     changeProject($event, pName) {
-        //  (ionChange)="changeProject($event, todayInsertData._projectName)"
         this.todayInsertData._projectName = pName;
         this.viewOrEdit = false;
     }

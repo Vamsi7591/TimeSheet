@@ -18,6 +18,7 @@ import { UserSettings } from '../providers/user-settings';
 import * as firebase from 'firebase';
 
 @Component({
+  selector: 'app',
     templateUrl: 'app.html'
 })
 export class MyApp {
@@ -28,6 +29,8 @@ export class MyApp {
     userCredentials: any;
     disconnectSubscription: any;
     connectSubscription: any;
+
+    activePage: any;
 
     constructor(public events: Events,
         public loadingController: LoadingController,
@@ -44,7 +47,7 @@ export class MyApp {
             // StatusBar.styleDefault();
             StatusBar.overlaysWebView(true); // let status bar overlay webview
 
-            StatusBar.backgroundColorByHexString('#673147'); // set status bar to white
+            StatusBar.backgroundColorByHexString('#00000'); // set status bar to white
             Splashscreen.hide();
 
             // -------------- OneSingal ------------------//
@@ -78,11 +81,13 @@ export class MyApp {
             { title: 'Project Master', component: ProjectMasterPage },
             { title: 'Employee Project', component: EmployeeProjectPage },
             { title: 'Summary Details', component: SummaryDetailsPage }
-
         ];
 
-        firebase.initializeApp(firebaseConfig);
+        this.activePage = this.pages[0];
+
+        firebase.initializeApp(firebaseConfig);//,"TimeSheet"
     }
+
 
     loadExistingUser() {
 
@@ -104,8 +109,13 @@ export class MyApp {
         //this.favoriteTeams = this.userSettings.getAllFavorites();
     }
 
+    checkActive(_page) {
+        return _page == this.activePage;
+    }
+
     openPage($event, page) {
         this.nav.setRoot(HomePage, page);
+        this.activePage = page;
     }
 
     ngAfterViewInit() {
