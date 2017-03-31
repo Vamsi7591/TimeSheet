@@ -19,4 +19,18 @@ ionic run ios
 
 ionic run windows 
 
+# If any depencency issues occured 
+
+ionic platform remove android
+ionic platform remove ios
+ionic platform remove windows
+
+# And add the re required platforms and enter *cordova prepare* in CLI
+
+ionic run android 
+
+ionic run ios 
+
+ionic run windows 
+
 
