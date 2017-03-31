@@ -21,11 +21,15 @@ ionic run windows
 
 # If any depencency issues occured 
 
+Remove the platform by entering the follwing commands,
+
 ionic platform remove android
+
 ionic platform remove ios
+
 ionic platform remove windows
 
-# And add the re required platforms and enter *cordova prepare* in CLI
+# And add the required platforms to the project and first enter *cordova prepare* in CLI and next following commands,
 
 ionic run android 
 
