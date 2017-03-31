@@ -82,7 +82,9 @@
     "de.appplant.cordova.plugin.local-notification",
     "cordova-plugin-app-event",
     "cordova-plugin-file",
-    "cordova.plugins.diagnostic"
+    "cordova.plugins.diagnostic",
+    "cordova-plugin-linkedin",
+    "cordova-plugin-crosswalk-webview"
   ],
   "cordovaPlatforms": [
     {
@@ -94,6 +96,11 @@
       "platform": "ios",
       "version": "",
       "locator": "ios"
+    },
+    {
+      "platform": "browser",
+      "version": "",
+      "locator": "browser"
     }
   ],
   "description": "TimeSheet: An Ionic project"
